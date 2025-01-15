@@ -1,0 +1,26 @@
+pipeline{
+    agent any
+    tools {
+        maven 'Maven3'
+    }
+    stages {
+        stage('GetCode') {
+            steps {
+                git branch: 'main', url: 'https://github.com/rupeshsonawane25/01-Maven-Web-App.git'
+
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('Sonar-Server-9.6') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+    }
+
